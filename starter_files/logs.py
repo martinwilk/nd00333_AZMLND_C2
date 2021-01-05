@@ -7,7 +7,7 @@ ws = Workspace.from_config()
 
 # Set with the deployment name
 with open("./settings.json") as configfile:
-    config = json.loads(config.read())
+    config = json.loads(configfile.read())
 name = config["deployment_name"]
 
 # load existing web service
