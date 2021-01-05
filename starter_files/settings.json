@@ -1,5 +1,5 @@
 {
-"URI":"http://example.com",
-"auth_key":"dfhweih83dhdwedeqwiwefwjow",
-"deployment_name": "test"
+"URI":"YOUR_SCORING_URI",
+"auth_key":"YOUR_API_KEY",
+"deployment_name": "bankmarketing-automl"
 }
