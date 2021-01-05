@@ -68,6 +68,8 @@
 # Processing:    92  137  28.3    151     176
 # Waiting:       92  137  28.3    151     176
 # Total:        114  160  28.0    172     199#
-
-
- ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer REPLACE_WITH_KEY' http://REPLACE_WITH_API_URL/score
+URI=`cat settings.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["URI"]'`
+key=`cat settings.json | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["auth_key"]'`
+echo "Endpoint URL: $URI"
+echo "Authentication Key: $key"
+ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer $key' $URI
