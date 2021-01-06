@@ -71,14 +71,14 @@ Therefore we need two terminal windows. First, we have to download the swagger.j
 
 Now we run the swagger.sh file using git bash and the swagger UI could be reached on localhost:9000. In the second window, we run the python script serve.py which serves the current directory including the swagger.json file in the browser. As a last step we use the Swagger UI to load the swagger.json file. You could find the documentation of the endpoint of the model provided by Swagger in the screenshots below. These screenshots show all methods of the API of the HTTP endpoint and show example requests and responses.
 
-![Swagger HTTP API methods]()
-![responses for models]()
+![Swagger Documentation]()
 
 After the exploration of the model endpoint using Swagger, I want to score some data using a HTTP Post request. By using the documentation provided by Swagger, I know the exact structure of the json payload of the request.
+
 By running the endpoint.py file in python a HTTP Post request containing the data which should be scored as json payload is sent to the endpoint. The endpoint sends a response containing the prediction for each of the instances back to the recipient. The result of this call is shown in the screenshot below.
 ![Output endpoint.py]()
 
-To check our web service to ease debugging in case of errors and to ensure it works well, I use the Apache benchmarking tool to gain insights about failed requests and the amount of time used to send a response. By running benchmark.sh in the terminal, the benchmark is performed. The results are displayed in the screenshot below.
+To check our web service if it is capable to deal with higher loads of requests in a reasonable amount of time, I use the Apache benchmarking tool to gain insights about failed requests and the amount of time used to send a response. In addition, this tool could provide useful information if the service is not healthy. By running benchmark.sh in the terminal, the benchmark is performed. The results are displayed in the screenshot below.
 ![Output ab]()
 
 ### Build pipeline endpoint
