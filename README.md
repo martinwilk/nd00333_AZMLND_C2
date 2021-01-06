@@ -43,7 +43,7 @@ To reduce manual effort in changing the URI of the endpoint and its key in the e
 I start by loading the dataset into the Azure Machine Learning Studio. When I loaded the provided lab, this step was already performed.
 ![Registered Dataset]()
 
-Next a AutoML run is created. Therefore I have to create a new compute cluster. As a configuration I use a Standard_DS12_v2 machine with 1 as minimum amount of cores and 6 as the maximum number of cores.  After the creation of the target variable has to be set. I choose y as the target. Lastly the type of the experiment has to be chosen. I choose classification because we have a binary target and adjust the following additional settings before creating the ML Run:
+Next a AutoML run is created. Therefore I have to create a new compute cluster. As a configuration I use Standard_DS12_v2 as VM size and 1 as the minimum amount of cores and 6 as the maximum number of cores.  After the creation of the target variable has to be set. I choose y as the target. Lastly the type of the experiment has to be chosen. I choose classification because we have a binary target and adjust the following additional settings before creating the ML Run:
 
 - Metric: AUC_weighted
 - Exit criterion: 1 hour
