@@ -11,7 +11,7 @@ The dataset I use is imbalanced, because only 10% of the customers subscribed to
 
 
 ## Architectural Diagram
-*TODO*: Provide an architectural diagram of the project and give an introduction of each step. An architectural diagram is an image that helps visualize the flow of operations from start to finish. In this case, it has to be related to the completed project, with its various stages that are critical to the overall flow. For example, one stage for managing models could be "using Automated ML to determine the best model".
+![Architectural Diagram of Project 2](./images/architecturalDiagram_project2.png)
 
 ## Key Steps
 *TODO*: Write a short description of the key steps. Remember to include all the screenshots required to demonstrate key steps.
