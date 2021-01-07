@@ -4,7 +4,7 @@ This is the second project of the Machine Learning Engineer with Microsoft Azure
 
 This project uses the Bankmarketing dataset (1). This dataset contains personal information from customers of a Portuguese banking institution like the age, the job and information to the last contact to the bank and if the client has subscribed a term deposit. So the banking company wants to find out which customers should be contacted via phone and informed about the term deposit offer.
 
-If you look on the distribution of the binary target (approx. 90 % 'no', 10% 'yes'), you will find out that the dataset is imbalanced. Because of the imbalance of the dataset I will use the _AUC_weighted_ metric to evaluate model performance. The metric _AUC_weighted_ is less influenced by class imbalance than accuracy. Another way to deal with the imbalanced dataset is over- or undersampling the data, which I will describe in more detail in the Further Improvements section.
+If you look on the distribution of the binary target (approx. 90 % 'no', 10% 'yes'), you will find out that the dataset is imbalanced. Because of the imbalance of the dataset I will use the _AUC_weighted_ metric to evaluate model performance. The metric _AUC_weighted_ is less influenced by class imbalance than accuracy. Another way to deal with the imbalanced dataset is oversampling or under-sampling the data, which I will describe in more detail in the Further Improvements section.
 
 
 ## Architectural Diagram
