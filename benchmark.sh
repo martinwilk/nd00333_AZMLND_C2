@@ -72,4 +72,4 @@ URI=`cat settings.json | python -c 'import json,sys;obj=json.load(sys.stdin);pri
 key=`cat settings.json | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["auth_key"])'`
 echo "Endpoint URL: $URI"
 echo "Authentication Key: $key"
-ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer $key' $URI
+ab -n 10 -v 4 -p data.json -T 'application/json' -H "Authorization: Bearer $key" $URI

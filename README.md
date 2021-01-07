@@ -53,9 +53,9 @@ The setting Exit criterion is a timeout for the experiment. It cancels the run i
 
 Below you could screenshots of the completed experiment and the best model found by AutoML.
 ![Experiment]()
-
+As you could see in the screenshot below, the best model is a Voting Ensemble model with a AUC_weighted value of 0.94717. The Voting Ensemble combines multiple classification models to achieve superior performance.
 ![best model]()
-The best model is an ... With ...
+
 
 The next step is to deploy the best model as an Azure Container Instance which exposes an endpoint which could be used to score new instances. To ensure a secure endpoint, authentication is enabled during the deployment of the best model.
 
