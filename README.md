@@ -1,6 +1,6 @@
 # Operationalizing Machine Learning in Microsoft Azure
 
-This is the second project of the Machine Learning Engineer with Microsoft Azure nanodegree. During this project a classification model is trained using AutoML. The best model is deployed as a Azure Container Instance and the REST endpoint of the deployed model is used to classify new instances. To automate the process of retraining the model, a pipeline is created and published. Using the REST endpoint of this pipeline, everyone with the authentication key is allowed to trigger a new run, for example if new data is available.
+In the following I will write about the results of the second project of the Machine Learning Engineer with Microsoft Azure Nanodegree. During this project a classification model is trained using AutoML. The best model is deployed as a Azure Container Instance and the REST endpoint of the deployed model is used to classify new instances. To automate the process of retraining the model, a pipeline is created and published. Using the REST endpoint of this pipeline, everyone with the authentication key is allowed to trigger a new run, for example if new data is available.
 
 This project uses the Bankmarketing dataset (1). This dataset contains personal information from customers of a Portuguese banking institution like the age, the job and information to the last contact to the bank and if the client has subscribed a term deposit. So the banking company wants to find out which customers should be contacted via phone and informed about the term deposit offer.
 
@@ -26,7 +26,7 @@ Now we know the exact format of a request to the endpoint, so I can try the REST
 
 To gain insights about the performance of the endpoint of the model, I use the Apache Benchmark tool. This tool sends multiple requests to the endpoint and measures the response time and the number of failed requests of the endpoint.
 
-The next step is to create a pipeline so you can start a new training over a HTTP request to the pipeline endpoint. This leads to a higher automation and is practical if new data arrive and the model should be retrained based on new data. The pipeline is built in a Jupyter notebook using the Azure SDK in Python.
+The next step is to create a pipeline so you can start a new training over a HTTP request to the pipeline endpoint. This leads to a higher automation and is practical if new data arrive and the model should be retrained based on new data. The pipeline is built using a Jupyter notebook which uses the Azure SDK in Python.
 
 Publishing the pipeline creates an endpoint of the pipeline. If a HTTP POST request with a json payload containing the experiment name is send to the pipeline endpoint, a new run of the pipeline is triggered.
 
@@ -41,7 +41,7 @@ The last step is to send a request to the pipeline's endpoint and to check wheth
 To reduce manual effort in changing the URI of the endpoint and its key in the endpoint.py and the benchmark.sh scripts, I use a settings.json file, where these information is stored. In the scripts the required URI and key are parsed from the configuration file settings.py. This file also contains the name of the experiment which is used in the logs.py script.
 
 I start by loading the dataset into the Azure Machine Learning Studio. When I loaded the provided lab, this step was already performed.
-![Registered Dataset]()
+![Registered Dataset](./images/registered-dataset.png)
 
 Next a AutoML run is created. Therefore I have to create a new compute cluster. As a configuration I use Standard_DS12_v2 as VM size and 1 as the minimum amount of cores and 6 as the maximum number of cores.  After the creation of the target variable has to be set. I choose y as the target. Lastly the type of the experiment has to be chosen. I choose classification because we have a binary target and adjust the following additional settings before creating the ML Run:
 
@@ -53,13 +53,13 @@ The setting Exit criterion is a timeout for the experiment. It cancels the run i
 
 Below you could screenshots of the completed experiment and the best model found by AutoML.
 ![Experiment](./images/experiment_completed.png)
-As you could see in the screenshot below, the best model is a Voting Ensemble model with a AUC_weighted value of 0.94717. The Voting Ensemble combines multiple classification models to achieve superior performance.
+As you could see in the screenshot below, the best model is a Voting Ensemble model with a AUC_weighted value of 0.94805. The Voting Ensemble combines multiple classification models to achieve superior performance.
 ![best model](./images/best_model.png)
 
 
 The next step is to deploy the best model as an Azure Container Instance which exposes an endpoint which could be used to score new instances. To ensure a secure endpoint, authentication is enabled during the deployment of the best model.
 
-Now I enable ApplicationInsights to get interesting information about the endpoint. These information are helpful when debugging the service. In the screenshots below you can see that ApplicationInsights has been enabled and the endpoint produces logs which are displayed in the terminal output.
+Now I enable ApplicationInsights to get interesting information about the endpoint. These information are helpful when debugging the service. In the screenshots below you can see that ApplicationInsights has been enabled and the endpoint produces logs which are displayed in the terminal output. Here I use the SDK to enable ApplicationInsights in the logs.py script. It is also possible to enable ApplicationInsights in the additional settings of the model deployment process.
 
 ![ApplicationInsights is enabled](./images/app_insights_enabled.png)
 ![logs.py output](./images/logs_output.png)
@@ -70,15 +70,17 @@ Therefore we need two terminal windows. First, we have to download the swagger.j
 
 Now we run the swagger.sh file using git bash and the swagger UI could be reached on localhost:9000. In the second window, we run the python script serve.py which serves the current directory including the swagger.json file in the browser. As a last step we use the Swagger UI to load the swagger.json file. You could find the documentation of the endpoint of the model provided by Swagger in the screenshots below.
 
-In the screenshot below you could see the documentation for the GET method. By using the GET method you can verify whether the service is working correctly. If so, the endpoint returns the string "Healthy", otherwise a JSON string with the error message is returned.
+In the screenshot below you could find the documentation for the GET method. By using the GET method you can verify whether the service is working correctly. If so, the endpoint returns the string "Healthy", otherwise a JSON string with the error message is returned.
 
 ![Swagger GET](./images/swagger_get.png)
+
 Below you can find the documentation for the POST method. It is used to score new instances by sending a json payload containing the data to be scored. The other screenshot shows the responses of the endpoint. If everything is fine (code 200) the model responds the prediction as a json string. In case of errors, the error message is returned as a JSON string.
+
 ![Swagger POST](./images/swagger_post.png)
 
 ![Swagger Documentation](./images/swagger_responses.png)
 
-After the exploration of the model endpoint using Swagger, I want to score some data using a HTTP Post request. By using the documentation provided by Swagger, I know the exact structure of the json payload of the request.
+After the exploration of the model endpoint using Swagger, I score some data using a HTTP Post request. By using the documentation provided by Swagger, I know the exact structure of the json payload of the request.
 
 By running the endpoint.py file in python a HTTP Post request containing the data which should be scored as json payload is sent to the endpoint. The endpoint sends a response containing the prediction for each of the instances back to the recipient. The result of this call is shown in the screenshot below.
 ![Output endpoint.py](./images/output_endpoint.png)
@@ -112,17 +114,15 @@ In the same moment the new run is displayed in the section Experiments of the Az
 ![running run ML Studio](./images/pipeline_running.png)
 
 
-
-
 ## Screen Recording
-You could find my screencast under https://---
+You could find my screencast under https://youtu.be/m0dH3OYTYUc.
 
 
 ## Further Improvements
 In this section I would like to elaborate on further improvements of this project to improve model performance.
 
 The first point I would like to mention is that class imbalance often leads to a lower model performance when the model is tested out-of-sample, because positive instances are rare which leads to a higher number of false negative samples.
-It is possible to tackle this deficiency by over- or undersampling the dataset. So the dataset contains the same number of positive and negative examples which will lead to a higher out-of-sample performance.
+It is possible to tackle this deficiency by over- or under-sampling the dataset. So the dataset contains the same number of positive and negative examples which will lead to a higher out-of-sample performance.
 
 We could also enable Deep Learning in the AutoML Run settings to use advanced techniques like neural nets to classify the data. These models often have a great performance if you have enough training data.
 
