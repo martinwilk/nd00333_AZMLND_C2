@@ -34,7 +34,7 @@ The last step is to send a request to the pipeline's endpoint and to check wheth
 
 
 ## Key Steps
-*TODO*: Write a short description of the key steps. Remember to include all the screenshots required to demonstrate key steps.
+
 
 ### Build model endpoint
 
@@ -52,34 +52,42 @@ Next a AutoML run is created. Therefore I have to create a new compute cluster. 
 The setting Exit criterion is a timeout for the experiment. It cancels the run if the run isn't completed after 1 hour. The concurrency setting limits the number of parallel runs to 5.
 
 Below you could screenshots of the completed experiment and the best model found by AutoML.
-![Experiment]()
+![Experiment](./images/experiment_completed.png)
 As you could see in the screenshot below, the best model is a Voting Ensemble model with a AUC_weighted value of 0.94717. The Voting Ensemble combines multiple classification models to achieve superior performance.
-![best model]()
+![best model](./images/best_model.png)
 
 
 The next step is to deploy the best model as an Azure Container Instance which exposes an endpoint which could be used to score new instances. To ensure a secure endpoint, authentication is enabled during the deployment of the best model.
 
 Now I enable ApplicationInsights to get interesting information about the endpoint. These information are helpful when debugging the service. In the screenshots below you can see that ApplicationInsights has been enabled and the endpoint produces logs which are displayed in the terminal output.
 
-
-![ApplicationInsights is enabled]()
-![logs.py output]()
+![ApplicationInsights is enabled](./images/app_insights_enabled.png)
+![logs.py output](./images/logs_output.png)
 
 To use the endpoint to score new data it is critical to know the structure of the correct payload including the features of the model of the HTTP Post request that is used to score new data. Swagger provides these information to us.
 
 Therefore we need two terminal windows. First, we have to download the swagger.json file from the URL displayed in the Azure Machine Learning Studio. For this step, I used curl in the git bash shell.
 
-Now we run the swagger.sh file using git bash and the swagger UI could be reached on localhost:9000. In the second window, we run the python script serve.py which serves the current directory including the swagger.json file in the browser. As a last step we use the Swagger UI to load the swagger.json file. You could find the documentation of the endpoint of the model provided by Swagger in the screenshots below. These screenshots show all methods of the API of the HTTP endpoint and show example requests and responses.
+Now we run the swagger.sh file using git bash and the swagger UI could be reached on localhost:9000. In the second window, we run the python script serve.py which serves the current directory including the swagger.json file in the browser. As a last step we use the Swagger UI to load the swagger.json file. You could find the documentation of the endpoint of the model provided by Swagger in the screenshots below.
 
-![Swagger Documentation]()
+In the screenshot below you could see the documentation for the GET method. By using the GET method you can verify whether the service is working correctly. If so, the endpoint returns the string "Healthy", otherwise a JSON string with the error message is returned.
+
+![Swagger GET](./images/swagger_get.png)
+Below you can find the documentation for the POST method. It is used to score new instances by sending a json payload containing the data to be scored. The other screenshot shows the responses of the endpoint. If everything is fine (code 200) the model responds the prediction as a json string. In case of errors, the error message is returned as a JSON string.
+![Swagger POST](./images/swagger_post.png)
+
+![Swagger Documentation](./images/swagger_responses.png)
 
 After the exploration of the model endpoint using Swagger, I want to score some data using a HTTP Post request. By using the documentation provided by Swagger, I know the exact structure of the json payload of the request.
 
 By running the endpoint.py file in python a HTTP Post request containing the data which should be scored as json payload is sent to the endpoint. The endpoint sends a response containing the prediction for each of the instances back to the recipient. The result of this call is shown in the screenshot below.
-![Output endpoint.py]()
+![Output endpoint.py](./images/output_endpoint.png)
 
 To check our web service if it is capable to deal with higher loads of requests in a reasonable amount of time, I use the Apache benchmarking tool to gain insights about failed requests and the amount of time used to send a response. In addition, this tool could provide useful information if the service is not healthy. By running benchmark.sh in the terminal, the benchmark is performed. The results are displayed in the screenshot below.
-![Output ab]()
+![Output ab](./images/output_benchmark.png)
+
+In addition, the ab command also returns a short summary of the response times. This summary is printed below.
+![Endpoint Benchmark Summary](./images/output_summary_benchmark.png)
 
 ### Build pipeline endpoint
 In this section, a pipeline endpoint is created which could be used to trigger a new run from all over the world using a HTTP POST request.
@@ -90,17 +98,18 @@ I create the pipeline using the Azure ML SDK in the Jupyter Notebook provided by
 
 We use the experiment created earlier to submit the pipeline. Now you can find this pipeline in the pipeline section of Azure ML Studio. In the other screenshot below you could see that the bankmarketing dataset is used by the AutoML module.
 
-![pipeline section]()
-![bankmarketing dataset with AutoML module]()
+![pipeline section](./images/pipeline_created.png)
+![Bankmarketing dataset with AutoML module](./images/bankmarketing_with_automl_module.png)
 
-After the pipeline run finishes, this pipeline could be  published. This creates a pipeline endpoint, which is displayed in the screenshots below. ACTIVE means that it is possible to send requests to this pipeline endpoint.
-![pipeline endpoints]()
-![Published Pipeline ACTIVE REST endpoint]()
+After the pipeline run finishes, this pipeline can be published. This creates a pipeline endpoint, which is displayed in the screenshot below.
+![pipeline endpoints](./images/pipeline_endpoint.png)
+To check the status of this pipeline endpoint, simply click on the pipeline endpoint listed in the screenshot printed above. Now the window "Published pipeline overview" which is depicted below, shows up. As you can see in the screenshot below this pipeline endpoint is active.
+![Published Pipeline ACTIVE REST endpoint](./images/published_pipeline_overview.png)
 
-Lastly we are able to test the pipeline endpoint by sending a json payload with the Experiment name to the pipeline endpoint. Therefore I use the request module of python. The pipeline endpoint sends a response including the ID for the new run. We look at the details of this new run using the RunDetails widget, which produces the output below
-![RunDetails Widget]()
+Now we are able to test the pipeline endpoint by sending a json payload with the Experiment name to the pipeline endpoint. Therefore I use python's request module. The pipeline endpoint responds the ID of the run triggered by the POST request. We look at the details of this new run using the RunDetails widget, which produces the output below.
+![RunDetails Widget](./images/runDetails.png)
 In the same moment the new run is displayed in the section Experiments of the Azure ML Studio as running like you could see in the screenshot below
-![running run ML Studio]()
+![running run ML Studio](./images/pipeline_running.png)
 
 
 
